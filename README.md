@@ -22,10 +22,16 @@ To run the project, just clone or download the project and run below command in 
 docker-compose up -d
 ```
 
-If you wish to install new packages or run any command inside the Docker container, run below command:
+Migrate the database to latest using below command:
 
 ```shell
-docker-compose exec app sh
+docker-compose exec app ./node_modules/.bin/knex migrate:latest
+```
+
+Lastly, trigger a refresh to fetch data from NAICS website using below command:
+
+```shell
+curl -X POST "http://localhost:3000/api/refresh"
 ```
 
 ## License
