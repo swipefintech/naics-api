@@ -51,11 +51,11 @@ async function fetchHtmlFromUrl(url) {
  * @returns {Promise<{code: string, title: string, businesses: number}[]|null>}
  */
 async function getFourDigitNaicsCodes(twoDigitCode) {
-  const $ = await fetchHtmlFromUrl(`https://www.naics.com/naics-code-description/?code=${twoDigitCode}`);
+  const $ = await fetchHtmlFromUrl(`https://www.naics.com/six-digit-naics/?code=${twoDigitCode}`);
   if (!$) return null;
   const codes = [];
   $('.entry-content > table')
-    .find('tbody > tr.headerRow')
+    .find('tbody > tr.headerRow:not(.groupFinal)')
     .each(function extractRowData() {
       const code = extractNaicCodeRowData($, this);
       if (code) codes.push(code);

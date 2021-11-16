@@ -10,16 +10,20 @@ const router = express.Router();
  *     description: List all NAICS codes.
  *     parameters:
  *       - name: parent
+ *         in: query
  *         description: Filter codes by parent code ID.
  *         type: integer
  *       - name: search
+ *         in: query
  *         description: Search for a substring in code's title.
  *         type: string
  *       - name: page
+ *         in: query
  *         description: Page number used for pagination.
  *         type: integer
  *         default: 1
  *       - name: count
+ *         in: query
  *         description: Number of returns to return per page.
  *         type: integer
  *         default: 10
@@ -46,6 +50,8 @@ router.get('/codes', async (req, res) => {
 
   if (req.query.parent) {
     query = query.where('parent_id', '=', req.query.parent);
+  } else {
+    query = query.whereNull('parent_id');
   }
 
   const page = req.query.page || 1;
