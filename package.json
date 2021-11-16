@@ -1,0 +1,36 @@
+{
+  "dependencies": {
+    "@elastic/elasticsearch": "^7.15.0",
+    "bull": "^4.1.0",
+    "cookie-parser": "~1.4.4",
+    "debug": "~2.6.9",
+    "express": "~4.16.1",
+    "ioredis": "^4.28.0",
+    "knex": "^0.95.13",
+    "morgan": "~1.9.1",
+    "mysql": "^2.18.1",
+    "swagger-jsdoc": "^6.1.0",
+    "swagger-ui-express": "^4.1.6"
+  },
+  "devDependencies": {
+    "eslint": "^7.32.0",
+    "eslint-config-airbnb-base": "^14.2.1",
+    "eslint-plugin-import": "^2.25.2",
+    "husky": "^7.0.4",
+    "lint-staged": "^11.2.6",
+    "mocha": "^9.1.3",
+    "nodemon": "^2.0.14",
+    "supertest": "^6.1.6"
+  },
+  "name": "starter-nodejs",
+  "description": "Boilerplate project to kick-start projects in Node.js, includes an HTTP layer, database layer, job queue along with Docker setup.",
+  "private": true,
+  "scripts": {
+    "postinstall": "husky install",
+    "start": "node bin/www",
+    "start:app": "nodemon --legacy-watch",
+    "start:queue": "node worker.js",
+    "test": "mocha --recursive"
+  },
+  "version": "0.0.0"
+}

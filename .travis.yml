@@ -1,0 +1,17 @@
+sudo: required
+
+language: node_js
+
+services:
+  - docker
+
+script:
+  - docker build -t $TRAVIS_REPO_SLUG .
+
+deploy:
+  provider: script
+  script: |
+    docker login -u $DOCKER_HUB_USERNAME -p $DOCKER_HUB_ACCESS_TOKEN
+    docker push $TRAVIS_REPO_SLUG:latest
+  on:
+    branch: main

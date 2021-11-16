@@ -1,0 +1,111 @@
+version: '3'
+
+networks:
+  app:
+
+services:
+  app:
+    build: .
+    command: npm run start:app
+    depends_on:
+      - mariadb
+      - redis
+    environment:
+      DATABASE_URL: mysql://app:app@mariadb:3306/app
+      DEBUG: starter-nodejs:*
+      ELASTICSEARCH_URL: http://elasticsearch:9200
+      NODE_ENV: development
+      REDIS_URL: redis://redis:6379
+    healthcheck:
+      test: curl -f http://localhost:3000
+    networks:
+      app:
+    ports:
+      - '3000:3000'
+    volumes:
+      - .:/app
+      - /app/node_modules
+
+  elasticsearch:
+    environment:
+      - discovery.type=single-node
+    image: elasticsearch:7.14.0
+    networks:
+      - app
+    ports:
+      - '9200:9200'
+      - '9300:9300'
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - elasticsearch_data:/usr/share/elasticsearch/data
+
+  mariadb:
+    image: mariadb:10.5
+    environment:
+      MYSQL_DATABASE: app
+      MYSQL_USER: app
+      MYSQL_PASSWORD: app
+      MYSQL_RANDOM_ROOT_PASSWORD: 'yes'
+    networks:
+      - app
+    ports:
+      - '3306:3306'
+    volumes:
+      - mariadb_data:/var/lib/mysql
+
+  minio:
+    command: server /data --console-address ":9001"
+    image: minio/minio
+    networks:
+      - app
+    ports:
+      - '9000:9000'
+      - '9001:9001'
+    volumes:
+      - minio_data:/data
+
+  phpmyadmin:
+    image: phpmyadmin:5
+    environment:
+      PMA_HOST: mariadb
+      PMA_USER: app
+      PMA_PASSWORD: app
+    networks:
+      - app
+    ports:
+      - '8080:80'
+
+  redis:
+    image: redis:6-alpine
+    networks:
+      - app
+    ports:
+      - '6379:6379'
+    volumes:
+      - redis_data:/data
+
+  queue:
+    build: .
+    command: npm run start:queue
+    depends_on:
+      - mariadb
+      - redis
+    environment:
+      DATABASE_URL: mysql://app:app@mariadb:3306/app
+      ELASTICSEARCH_URL: http://elasticsearch:9200
+      NODE_ENV: development
+      REDIS_URL: redis://redis:6379
+    networks:
+      app:
+    volumes:
+      - .:/app
+      - /app/node_modules
+
+volumes:
+  elasticsearch_data:
+  mariadb_data:
+  minio_data:
+  redis_data:

@@ -1,0 +1,23 @@
+name: Build
+
+trigger:
+  - main
+
+pool:
+  vmImage: ubuntu-latest
+
+variables:
+  imageName: starter-nodejs
+
+steps:
+  - task: Docker@2
+    displayName: Build Docker image
+    inputs:
+      repository: $(imageName)
+      command: build
+  - task: Docker@2
+    displayName: Publish to DockerHub
+    inputs:
+      containerRegistry: $(dockerHub)
+      repository: $(imageTag)
+      command: push

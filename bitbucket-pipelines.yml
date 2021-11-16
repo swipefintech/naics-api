@@ -1,0 +1,23 @@
+image: atlassian/default-image:2
+
+pipelines:
+  branches:
+    main:
+      - step:
+          name: Login to DockerHub
+          script:
+            - docker login -u $DOCKER_HUB_USERNAME -p $DOCKER_HUB_ACCESS_TOKEN
+          services:
+            - docker
+      - step:
+          name: Build Docker image
+          script:
+            - docker build -t $BITBUCKET_REPO_FULL_NAME:latest .
+          services:
+            - docker
+      - step:
+          name: Publish to DockerHub
+          script:
+            - docker push $BITBUCKET_REPO_FULL_NAME:latest
+          services:
+            - docker
