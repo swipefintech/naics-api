@@ -6,6 +6,24 @@
 	},
 	"item": [
 		{
+			"name": "Health check",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{API_ENDPOINT}}/api/",
+					"host": [
+						"{{API_ENDPOINT}}"
+					],
+					"path": [
+						"api",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "Trigger data refresh",
 			"request": {
 				"method": "POST",

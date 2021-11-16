@@ -4,7 +4,7 @@ module.exports = {
     basePath: '/api',
     explorer: true,
     info: {
-      title: 'Node.js Starter',
+      title: 'NAICS',
       version: '1.0.0',
     },
     swagger: '2.0',
