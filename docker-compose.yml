@@ -13,7 +13,6 @@ services:
     environment:
       DATABASE_URL: mysql://app:app@mariadb:3306/app
       DEBUG: naics-api:*
-      ELASTICSEARCH_URL: http://elasticsearch:9200
       NODE_ENV: development
       REDIS_URL: redis://redis:6379
     healthcheck:
@@ -25,22 +24,6 @@ services:
     volumes:
       - .:/app
       - /app/node_modules
-
-  elasticsearch:
-    environment:
-      - discovery.type=single-node
-    image: elasticsearch:7.14.0
-    networks:
-      - app
-    ports:
-      - '9200:9200'
-      - '9300:9300'
-    ulimits:
-      memlock:
-        soft: -1
-        hard: -1
-    volumes:
-      - elasticsearch_data:/usr/share/elasticsearch/data
 
   mariadb:
     image: mariadb:10.5
@@ -55,17 +38,6 @@ services:
       - '3306:3306'
     volumes:
       - mariadb_data:/var/lib/mysql
-
-  minio:
-    command: server /data --console-address ":9001"
-    image: minio/minio
-    networks:
-      - app
-    ports:
-      - '9000:9000'
-      - '9001:9001'
-    volumes:
-      - minio_data:/data
 
   phpmyadmin:
     image: phpmyadmin:5
@@ -95,7 +67,6 @@ services:
       - redis
     environment:
       DATABASE_URL: mysql://app:app@mariadb:3306/app
-      ELASTICSEARCH_URL: http://elasticsearch:9200
       NODE_ENV: development
       REDIS_URL: redis://redis:6379
     networks:
@@ -105,7 +76,5 @@ services:
       - /app/node_modules
 
 volumes:
-  elasticsearch_data:
   mariadb_data:
-  minio_data:
   redis_data:
