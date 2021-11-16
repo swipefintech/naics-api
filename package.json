@@ -22,8 +22,8 @@
     "nodemon": "^2.0.14",
     "supertest": "^6.1.6"
   },
-  "name": "starter-nodejs",
-  "description": "Boilerplate project to kick-start projects in Node.js, includes an HTTP layer, database layer, job queue along with Docker setup.",
+  "name": "naics-api",
+  "description": "Scraper and API built on top of data fed from https://www.naics.com/search/.",
   "private": true,
   "scripts": {
     "postinstall": "husky install",

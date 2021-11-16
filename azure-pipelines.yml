@@ -7,7 +7,7 @@ pool:
   vmImage: ubuntu-latest
 
 variables:
-  imageName: starter-nodejs
+  imageName: naics-api
 
 steps:
   - task: Docker@2

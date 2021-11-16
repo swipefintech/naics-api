@@ -4,7 +4,7 @@
  * Module dependencies.
  */
 
-const debug = require('debug')('starter-nodejs:server');
+const debug = require('debug')('naics-api:server');
 const http = require('http');
 const app = require('../app');
 
