@@ -20,6 +20,7 @@ app.use(cookies());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/api', require('./routes/index'));
+app.use('/api', require('./routes/refresh'));
 app.use('/api', require('./routes/users'));
 
 module.exports = app;

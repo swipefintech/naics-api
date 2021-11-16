@@ -34,7 +34,7 @@ function extractNaicCodeRowData($, row) {
 async function fetchHtmlFromUrl(url) {
   let response;
   try {
-    response = await axios.get(url);
+    response = await axios.get(url, { timeout: 10 * 1000 });
   } catch (e) {
     debug(e);
   }
@@ -47,57 +47,63 @@ async function fetchHtmlFromUrl(url) {
 }
 
 /**
- * @param {number} twoDigitCode
- * @returns {Promise<*[]|null>}
+ * @param {string} twoDigitCode
+ * @returns {Promise<{code: string, title: string, businesses: number}[]|null>}
  */
 async function getFourDigitNaicsCodes(twoDigitCode) {
   const $ = await fetchHtmlFromUrl(`https://www.naics.com/naics-code-description/?code=${twoDigitCode}`);
   if (!$) return null;
   const codes = [];
-  $('.entry-content > table > tbody > tr.headerRow').each(function extractRowData() {
-    const code = extractNaicCodeRowData($, this);
-    if (code) codes.push(code);
-  });
+  $('.entry-content > table')
+    .find('tbody > tr.headerRow')
+    .each(function extractRowData() {
+      const code = extractNaicCodeRowData($, this);
+      if (code) codes.push(code);
+    });
   return codes;
 }
 
 /**
- * @param {number} fourDigitCode
+ * @param {string} fourDigitCode
  * @returns {Promise<*[]|null>}
  */
 async function getSixDigitNaicsCodes(fourDigitCode) {
   const $ = await fetchHtmlFromUrl(`https://www.naics.com/naics-code-description/?code=${fourDigitCode}`);
   if (!$) return null;
   const codes = [];
-  $('.entry-content > table > tbody > tr.groupRow').each(function extractRowData() {
-    const code = extractNaicCodeRowData($, this);
-    if (code) codes.push(code);
-  });
+  $('.entry-content > table')
+    .find('tbody > tr.groupRow')
+    .each(function extractRowData() {
+      const code = extractNaicCodeRowData($, this);
+      if (code) codes.push(code);
+    });
   return codes;
 }
 
 /**
  * @param {boolean} autoExpand
- * @returns {Promise<*[]|null>}
+ * @returns {Promise<{code: string, title: string, businesses: number}[]|null>}
  */
 async function getTwoDigitNaicsCodes(autoExpand = true) {
   const $ = await fetchHtmlFromUrl('https://www.naics.com/search/');
   if (!$) return null;
   const codes = [];
-  $('.entry-content > table > tbody > tr').each(function extractRowData() {
-    const code = extractNaicCodeRowData($, this);
-    if (code) {
-      if (autoExpand && code.code.indexOf('-') >= 0) {
-        const [from, until] = code.code.split('-')
-          .map((x) => Number.parseInt(x.trim(), 10));
-        for (let i = from; i <= until; i += 1) {
-          codes.push({ ...code, code: i.toString(), group: code.code });
+  $('.entry-content > table')
+    .find('tbody > tr')
+    .each(function extractRowData() {
+      const code = extractNaicCodeRowData($, this);
+      if (code) {
+        if (autoExpand && code.code.indexOf('-') >= 0) {
+          const [from, until] = code.code.split('-')
+            .map((x) => Number.parseInt(x.trim(), 10));
+          for (let i = from; i <= until; i += 1) {
+            codes.push({ ...code, code: i.toString() });
+          }
+        } else {
+          codes.push(code);
         }
-      } else {
-        codes.push(code);
       }
-    }
-  });
+    });
   return codes;
 }
 

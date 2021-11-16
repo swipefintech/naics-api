@@ -67,6 +67,7 @@ services:
       - redis
     environment:
       DATABASE_URL: mysql://app:app@mariadb:3306/app
+      DEBUG: naics-api:*
       NODE_ENV: development
       REDIS_URL: redis://redis:6379
     networks:
