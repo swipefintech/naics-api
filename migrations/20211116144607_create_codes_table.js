@@ -3,7 +3,7 @@ exports.up = function migrate(knex) {
     table.increments();
     table.string('code', 6).notNullable().index();
     table.string('title').notNullable().index();
-    table.string('businesses').notNullable();
+    table.bigInteger('businesses').unsigned().notNullable();
     table.timestamp('created_at').defaultTo(knex.fn.now());
     table.timestamp('updated_at').defaultTo(knex.fn.now());
   });
